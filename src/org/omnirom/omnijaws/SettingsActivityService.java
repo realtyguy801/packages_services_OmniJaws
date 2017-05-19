@@ -67,11 +67,16 @@ public class SettingsActivityService extends PreferenceActivity implements OnPre
     private Preference mUpdateStatus;
     private Handler mHandler = new Handler();
     protected boolean mShowIconPack;
+    private SwitchPreference mSpeed;
+    private SwitchPreference mDirection;
 
     private static final String PREF_KEY_CUSTOM_LOCATION_CITY = "weather_custom_location_city";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     private static final String WEATHER_ICON_PACK = "weather_icon_pack";
     private static final String PREF_KEY_UPDATE_STATUS = "update_status";
+
+    private static final String PREF_KEY_WINDSPEED = "omnijaws_windspeed_m_s";
+    private static final String PREF_KEY_WINDDIRECTION = "omnijaws_winddirection_display";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -121,6 +126,18 @@ public class SettingsActivityService extends PreferenceActivity implements OnPre
             checkLocationEnabled();
         }
         mWeatherIconPack = (ListPreference) findPreference(WEATHER_ICON_PACK);
+
+        mSpeed =
+            (SwitchPreference) findPreference(PREF_KEY_WINDSPEED);
+        mSpeed.setChecked((Settings.System.getInt(getContentResolver(),
+                            Settings.System.OMNIJAWS_WINDSPEED_M_S, 0) == 1));
+        mSpeed.setOnPreferenceChangeListener(this);
+
+        mDirection =
+            (SwitchPreference) findPreference(PREF_KEY_WINDDIRECTION);
+        mDirection.setChecked((Settings.System.getInt(getContentResolver(),
+                            Settings.System.OMNIJAWS_WINDDIRECTION_DISPLAY, 0) == 1));
+        mDirection.setOnPreferenceChangeListener(this);
 
         if (mShowIconPack) {
             String settingHeaderPackage = Config.getIconPack(this);
@@ -235,6 +252,16 @@ public class SettingsActivityService extends PreferenceActivity implements OnPre
                         Settings.System.OMNIJAWS_WEATHER_ICON_PACK, value);
             int valueIndex = mWeatherIconPack.findIndexOfValue(value);
             mWeatherIconPack.setSummary(mWeatherIconPack.getEntries()[valueIndex]);
+            return true;
+        } else if (preference == mSpeed) {
+            boolean value = (Boolean) newValue;
+            Settings.System.putInt(getContentResolver(),
+                    Settings.System.OMNIJAWS_WINDSPEED_M_S, value ? 1 : 0);
+            return true;
+        } else if (preference == mDirection) {
+            boolean value = (Boolean) newValue;
+            Settings.System.putInt(getContentResolver(),
+                    Settings.System.OMNIJAWS_WINDDIRECTION_DISPLAY, value ? 1 : 0);
             return true;
         }
         return false;

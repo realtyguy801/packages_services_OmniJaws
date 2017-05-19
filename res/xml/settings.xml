@@ -60,4 +60,20 @@
         android:key="weather_icon_pack"
         android:title="@string/weather_icon_pack_title" />
 
+    <SwitchPreference
+        android:key="omnijaws_windspeed_m_s"
+        android:title="@string/weather_windspeed_metric_units"
+        android:dependency="enable"
+        android:summaryOn="@string/weather_windspeed_metric_units_summaryOn"
+        android:summaryOff="@string/weather_windspeed_metric_units_summaryOff"
+        android:defaultValue="false" />
+
+    <SwitchPreference
+        android:key="omnijaws_winddirection_display"
+        android:title="@string/weather_winddirection_display_title"
+        android:dependency="enable"
+        android:summaryOn="@string/weather_winddirection_display_summaryOn"
+        android:summaryOff="@string/weather_winddirection_display_summaryOff"
+        android:defaultValue="false" />
+
 </PreferenceScreen>
